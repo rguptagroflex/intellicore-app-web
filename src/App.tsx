@@ -7,6 +7,8 @@ import { Box } from "@chakra-ui/react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import Layout from "./app/components/layout/Layout";
 import Login from "./app/pages/auth/Login";
+import AuthColumn from "./app/pages/auth/AuthColumn";
+import SignUp from "./app/pages/auth/SignUp";
 
 function App() {
   return (
@@ -25,7 +27,11 @@ function App() {
           <Route path="/insights" element={<div>Insights</div>} />
           <Route path="/reports" element={<div>Reports</div>} />
         </Route>
-        <Route path="/login" element={<Login />} />
+        {/* <Route path="/login" element={<Login />} /> */}
+        <Route path="/auth" element={<AuthColumn />}>
+          <Route path="/auth/signup" element={<SignUp />} />
+          <Route path="/auth/login" element={<Login />} />
+        </Route>
         <Route path="*" element={<Navigate to={"/"} />} />
       </Routes>
     </BrowserRouter>
