@@ -53,8 +53,8 @@ const semanticTokens = {
       },
       input: {
         value: {
-          _light: "{colors.brand.700}",
-          _dark: "{colors.brand.700}",
+          _light: "{colors.brand.600}",
+          _dark: "{colors.brand.600}",
         },
         description: "Input Background color",
       },
@@ -80,6 +80,20 @@ const semanticTokens = {
           _dark: "{colors.brand.800}",
         },
         description: "Secondary Foreground/Text color",
+      },
+      placeholder: {
+        value: {
+          _light: "{colors.brand.700}",
+          _dark: "{colors.brand.700}",
+        },
+        description: "Placeholder Foreground/Text color",
+      },
+      link: {
+        value: {
+          _light: "{colors.brand.100}",
+          _dark: "{colors.brand.100}",
+        },
+        description: "Text Link Foreground/Text color",
       },
     },
   },

@@ -8,6 +8,8 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import Layout from "./app/components/layout/Layout";
 import Login from "./app/pages/auth/Login";
 import Home from "./app/pages/home/Home";
+import AuthColumn from "./app/pages/auth/AuthColumn";
+import SignUp from "./app/pages/auth/SignUp";
 
 function App() {
   return (
@@ -19,7 +21,11 @@ function App() {
           <Route path="/insights" element={<Home />} />
           <Route path="/reports" element={<Home />} />
         </Route>
-        <Route path="/login" element={<Login />} />
+        {/* <Route path="/login" element={<Login />} /> */}
+        <Route path="/auth" element={<AuthColumn />}>
+          <Route path="/auth/signup" element={<SignUp />} />
+          <Route path="/auth/login" element={<Login />} />
+        </Route>
         <Route path="*" element={<Navigate to={"/"} />} />
       </Routes>
     </BrowserRouter>

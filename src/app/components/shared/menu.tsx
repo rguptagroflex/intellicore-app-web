@@ -104,7 +104,9 @@ export const MenuContextTrigger = ChakraMenu.ContextTrigger
 export const MenuRoot = ChakraMenu.Root
 export const MenuSeparator = ChakraMenu.Separator
 
-export const MenuItem = ChakraMenu.Item
+export const MenuItem = (props: ChakraMenu.ItemProps) => (
+  <ChakraMenu.Item {...props} _hover={{ bg: "bg.secondary", color: "black" }} />
+);
 export const MenuItemText = ChakraMenu.ItemText
 export const MenuItemCommand = ChakraMenu.ItemCommand
 export const MenuTrigger = ChakraMenu.Trigger

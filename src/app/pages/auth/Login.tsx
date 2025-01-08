@@ -1,49 +1,82 @@
-import { Box, Image, Text } from "@chakra-ui/react";
-import logo1 from "@/assets/intellicore/logo1.svg";
+import { Flex, GridItem, Input, Text } from "@chakra-ui/react";
+import { useNavigate } from "react-router";
+import { PasswordInput } from "@/app/components/shared/password-input";
+import { Button } from "@/app/components/shared/button";
+import { Field } from "@/app/components/shared/field";
 
 const Login = () => {
+  const navigate = useNavigate();
   return (
-    <Box
-      css={{
-        bgColor: "bg.tertiary",
-        minHeight: "100vh",
-        width: "100vw",
-        paddingTop: "40px",
-        paddingLeft: "10px",
-        display: "flex",
-      }}
-    >
-      <Box
-        borderTopRadius={"150px"}
-        flex={"1"}
-        bgColor={"bg.secondary"}
-        display={{ base: "none", lg: "flex" }}
-        flexDirection={"column"}
-        justifyContent={"center"}
-        alignItems={"center"}
+    <GridItem colSpan={1}>
+      <Flex
+        flexDir="column"
+        alignItems="center"
+        justifyContent="center"
+        gap={5}
+        p={{ base: 10, md: 14, lg: 20 }}
       >
-        <Image
-          src={logo1}
-          width={"120px"}
-          height={"120px"}
-          objectFit={"contain"}
-          marginBottom={"1rem"}
-        />
-        <Text fontWeight={"normal"} fontSize={"2xl"}>
-          Get Started with Us
+        <Text fontSize="30px">Welcome Back!</Text>
+        <Text textAlign="center" mb={5}>
+          Enter your credentials to log in
         </Text>
-        <Text
-          width={"224px"}
-          fontWeight={"normal"}
-          textAlign={"center"}
-          fontSize={"sm"}
-          className="input-font"
+
+        <Flex flexDir="column" w="full" gapY={2}>
+          <Field label="Email" required>
+            <Input
+              borderRadius="2xl"
+              px={5}
+              py={7}
+              placeholder="eg. johnfrans@gmail.com"
+              bg="bg.input"
+              _placeholder={{ color: "fg.placeholder" }}
+            />
+          </Field>
+        </Flex>
+        <Flex flexDir="column" w="full" gapY={2}>
+          <Field
+            label="Password"
+            helperText="Must be at least 8 characters"
+            required
+          >
+            <PasswordInput
+              borderRadius="2xl"
+              px={5}
+              py={7}
+              placeholder="Enter your password"
+              bg="bg.input"
+              _placeholder={{ color: "fg.placeholder" }}
+            />
+          </Field>
+        </Flex>
+
+        <Button
+          borderRadius="2xl"
+          bg="secondary"
+          color="fg.secondary"
+          _hover={{ bg: "primary", color: "fg.primary" }}
+          transition="all 0.1s ease"
+          w="5/6"
+          py={7}
+          mt={5}
         >
-          Complete these easy steps to register your account
+          Log In
+        </Button>
+
+        <Text fontSize="sm">
+          Don't have an account?{" "}
+          <Text
+            as="span"
+            color="fg.link"
+            cursor="pointer"
+            onClick={() => {
+              navigate("/auth/signup");
+            }}
+          >
+            Sign Up
+          </Text>
         </Text>
-      </Box>
-      <Box flex={"1"}></Box>
-    </Box>
+      </Flex>
+    </GridItem>
   );
 };
 
