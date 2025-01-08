@@ -85,7 +85,7 @@ const semanticTokens = {
       placeholder: {
         value: {
           _light: "{colors.brand.700}",
-          _dark: "{colors.brand.600}",
+          _dark: "{colors.brand.700}",
         },
         description: "Placeholder Foreground/Text color",
       },
