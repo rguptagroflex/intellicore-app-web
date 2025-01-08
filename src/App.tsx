@@ -7,23 +7,17 @@ import { Box } from "@chakra-ui/react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import Layout from "./app/components/layout/Layout";
 import Login from "./app/pages/auth/Login";
+import Home from "./app/pages/home/Home";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route
-            index
-            element={
-              <Button isPrimary size={"lg"}>
-                I am a buton
-              </Button>
-            }
-          />
-          <Route path="/data-management" element={<div>Data management</div>} />
-          <Route path="/insights" element={<div>Insights</div>} />
-          <Route path="/reports" element={<div>Reports</div>} />
+          <Route index element={<Home />} />
+          <Route path="/data-management" element={<Home />} />
+          <Route path="/insights" element={<Home />} />
+          <Route path="/reports" element={<Home />} />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="*" element={<Navigate to={"/"} />} />

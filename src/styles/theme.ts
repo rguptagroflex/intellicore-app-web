@@ -2,7 +2,6 @@ import {
   createSystem,
   defaultConfig,
   defineConfig,
-  defineRecipe,
 } from "@chakra-ui/react";
 
 const tokens = {

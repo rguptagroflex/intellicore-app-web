@@ -16,14 +16,16 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.input-font {
-  font-family: "Manrope", sans-serif;
+* {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
+  padding: 0;
   display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  min-width: 480px;
+  /* place-items: center; */
+  /* min-width: 320px; */
+  /* min-height: 100vh; */
 }
