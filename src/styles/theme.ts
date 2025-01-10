@@ -1,8 +1,4 @@
-import {
-  createSystem,
-  defaultConfig,
-  defineConfig,
-} from "@chakra-ui/react";
+import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react";
 
 const tokens = {
   colors: {
@@ -80,6 +76,13 @@ const semanticTokens = {
           _dark: "{colors.brand.800}",
         },
         description: "Secondary Foreground/Text color",
+      },
+      input: {
+        value: {
+          _light: "{colors.brand.950}",
+          _dark: "{colors.brand.950}",
+        },
+        description: "Input Foreground/Text color",
       },
       placeholder: {
         value: {

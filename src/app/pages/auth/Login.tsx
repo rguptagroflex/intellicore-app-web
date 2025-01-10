@@ -1,82 +1,77 @@
-import { Flex, GridItem, Input, Text } from "@chakra-ui/react";
-import { useNavigate } from "react-router";
-import { PasswordInput } from "@/app/components/shared/password-input";
 import { Button } from "@/app/components/shared/button";
 import { Field } from "@/app/components/shared/field";
+import Input from "@/app/components/shared/input";
+import { PasswordInput } from "@/app/components/shared/password-input";
+import { Box, Flex, Stack, Text } from "@chakra-ui/react";
+import { useState } from "react";
+import { Link } from "react-router";
 
 const Login = () => {
-  const navigate = useNavigate();
+  const [loginForm, setLoginForm] = useState({
+    email: "",
+    password: "",
+  });
+
+  console.log(loginForm, "Login form");
+
   return (
-    <GridItem colSpan={1}>
-      <Flex
-        flexDir="column"
-        alignItems="center"
-        justifyContent="center"
-        gap={5}
-        p={{ base: 10, md: 14, lg: 20 }}
-      >
-        <Text fontSize="30px">Welcome Back!</Text>
-        <Text textAlign="center" mb={5}>
-          Enter your credentials to log in
-        </Text>
-
-        <Flex flexDir="column" w="full" gapY={2}>
-          <Field label="Email" required>
-            <Input
-              borderRadius="2xl"
-              px={5}
-              py={7}
-              placeholder="eg. johnfrans@gmail.com"
-              bg="bg.input"
-              _placeholder={{ color: "fg.placeholder" }}
-            />
-          </Field>
-        </Flex>
-        <Flex flexDir="column" w="full" gapY={2}>
-          <Field
-            label="Password"
-            helperText="Must be at least 8 characters"
+    <Flex
+      // marginTop={"30px"}
+      flexDirection={"column"}
+      alignItems={"center"}
+      justifyContent={"center"}
+      px={"10"}
+    >
+      <Text fontSize={"3xl"} marginBottom={"10px"}>
+        Welcome to Intellicore
+      </Text>
+      <Text textStyle={"sm"} fontWeight={"light"} textAlign={"center"}>
+        Enter your Login Credentials to Login
+      </Text>
+      <Stack gap={"4"} width={"full"} marginTop={"20px"}>
+        <Field required label={"Email"}>
+          <Input
             required
-          >
-            <PasswordInput
-              borderRadius="2xl"
-              px={5}
-              py={7}
-              placeholder="Enter your password"
-              bg="bg.input"
-              _placeholder={{ color: "fg.placeholder" }}
-            />
-          </Field>
-        </Flex>
-
-        <Button
-          borderRadius="2xl"
-          bg="secondary"
-          color="fg.secondary"
-          _hover={{ bg: "primary", color: "fg.primary" }}
-          transition="all 0.1s ease"
-          w="5/6"
-          py={7}
-          mt={5}
-        >
-          Log In
-        </Button>
-
-        <Text fontSize="sm">
-          Don't have an account?{" "}
-          <Text
-            as="span"
-            color="fg.link"
-            cursor="pointer"
-            onClick={() => {
-              navigate("/auth/signup");
+            type="email"
+            value={loginForm.email}
+            placeholder={"eg. johnfrans@gmail.com"}
+            onChange={(e) => {
+              setLoginForm({
+                ...loginForm,
+                email: e.target.value,
+              });
             }}
-          >
+          />
+        </Field>
+        <Field required label={"Password"}>
+          <PasswordInput
+            placeholder={"Enter your password"}
+            value={loginForm.password}
+            onChange={(e) => {
+              setLoginForm({
+                ...loginForm,
+                password: e.target.value,
+              });
+            }}
+          />
+        </Field>
+      </Stack>
+
+      <Button width={"5/6"} py={7} marginTop={"24px"} isPrimary>
+        Log In
+      </Button>
+
+      <Flex marginTop={"20px"}>
+        <Text marginRight={"5px"} textStyle={"sm"}>
+          Don't have an account?
+        </Text>
+        <Link to="/auth/sign-up">
+          <Text color={"secondary"} textStyle={"sm"}>
             Sign Up
           </Text>
-        </Text>
+        </Link>
       </Flex>
-    </GridItem>
+    </Flex>
   );
 };
 

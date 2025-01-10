@@ -33,23 +33,42 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       loadingText,
       children,
       size,
-      isPrimary,
+      isPrimary = true,
       isSecondary,
       isOutlined,
+      css,
       ...rest
     } = props;
 
-    const base = {
+    const base: ChakraButtonProps = {
+      py: 5,
+      px: 5,
       display: "flex",
       outline: "none",
       focusRing: "none",
+      borderWidth: "0",
+      borderRadius: "13px",
+      // _hover: {
+      //   borderColor: "transparent",
+      // },
+    };
+    const primary: ChakraButtonProps = {
+      bg: "bg.primary",
+      color: "fg.primary",
       _hover: {
-        borderColor: "transparent",
+        bg: "bg.secondary",
+        color: "fg.secondary",
       },
     };
-    const primary = { bg: "bg.primary", color: "fg.primary" };
-    const secondary = { bg: "bg.secondary", color: "fg.secondary" };
-    const outline = {
+    const secondary: ChakraButtonProps = {
+      bg: "bg.secondary",
+      color: "fg.secondary",
+      _hover: {
+        bg: "bg.primary",
+        color: "fg.primary",
+      },
+    };
+    const outline: ChakraButtonProps = {
       borderWidth: "2px",
       borderStyle: "solid",
       borderColor: isPrimary ? "primary" : "secondary",
@@ -64,7 +83,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     return (
       <ChakraButton
-        css={styles}
+        css={{ ...styles, ...css }}
         disabled={loading || disabled}
         ref={ref}
         {...rest}

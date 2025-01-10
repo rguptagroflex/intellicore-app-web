@@ -1,18 +1,32 @@
-import {
-  Button,
-  Flex,
-  GridItem,
-  Input,
-  MenuTrigger,
-  Text,
-} from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
-import { PasswordInput } from "@/app/components/shared/password-input";
-import { useNavigate } from "react-router";
-import { MenuContent, MenuItem, MenuRoot } from "@/app/components/shared/menu";
+import { Button } from "@/app/components/shared/button";
 import { Field } from "@/app/components/shared/field";
+import Input from "@/app/components/shared/input";
+import { PasswordInput } from "@/app/components/shared/password-input";
+import { SelectInput } from "@/app/components/shared/select-input";
+import webStorageKeyEnum from "@/app/enums/web-storage-key.enum";
+import getAllowedCountries from "@/app/helpers/getAllowedCountries";
+import { entitlementPayload } from "@/app/helpers/request";
+import { sortObjectArrayByProperty } from "@/app/helpers/sortObjectArrayByProperty";
+import intellicoreService from "@/app/services/intellicore.service";
+import WebStorageService from "@/app/services/webstorage.service";
+import { Box, Flex, Stack, Text } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router";
 
-interface Country {
+type StateDetails = {
+  value?: number;
+  label?: string;
+  id: number;
+  stateCode: number;
+  stateName: string;
+  countryId: number;
+  countryCode: string;
+  stateTax: string;
+};
+
+type CountryDetails = {
+  value: number;
+  label?: string;
   id: number;
   countryName: string;
   countryCode: number;
@@ -23,206 +37,226 @@ interface Country {
   taxRegulation: string;
   countryIso2: string;
   countryIso3: string;
-  countryStateDetails: Array<State>;
-}
+  countryStateDetails: StateDetails[];
+};
 
-interface State {
-  id: string;
-  stateCode: number;
-  stateName: string;
-  countryId: number;
-  countryCode: string;
-  stateTax: string;
-}
-
-const SignUp = () => {
+const Signup = () => {
   const navigate = useNavigate();
+  const [countryOptions, setCountryOptions] = useState<CountryDetails[]>([]);
+  const [stateOptions, setStateOptions] = useState<StateDetails[]>([]);
 
-  const [countries, setCountries] = useState<Country[]>();
-  const [selectedCountry, setSelectedCountry] = useState<Country>();
-  const [selectedState, setSelectedState] = useState<State>();
+  const [signupForm, setSignupForm] = useState<{
+    email: string;
+    country: CountryDetails | null;
+    state: StateDetails | null;
+    password: string;
+  }>({
+    email: "",
+    country: null,
+    state: null,
+    password: "",
+  });
 
   useEffect(() => {
-    const fetchCountries = async () => {
-      try {
-        const promise = await fetch(
-          "https://qa.groflexerp.com/identityapi/countries"
+    intellicoreService.getCounteriesWithStates().then((res) => {
+      // console.log(res.data, "countries with states");
+      let { data } = res as { data: CountryDetails[] };
+      data?.forEach((country: CountryDetails) => {
+        country.countryStateDetails = sortObjectArrayByProperty(
+          country?.countryStateDetails,
+          "stateName"
         );
-        const response = await promise.json();
-        console.log(response);
-        setCountries(response.data);
-      } catch (error) {
-        console.error("Error fetching countries:", error);
-      }
-    };
-
-    fetchCountries();
+        country.countryStateDetails = country?.countryStateDetails.map(
+          (state: StateDetails) => ({
+            ...state,
+            value: state.id,
+            label: state.stateName,
+          })
+        );
+        country.value = country.id;
+        country.label = country.countryName || "";
+      });
+      // console.log(data, "DATA");
+      const sortedCountries = sortObjectArrayByProperty(data, "countryName");
+      setCountryOptions(sortedCountries);
+    });
   }, []);
 
   useEffect(() => {
-    console.log(selectedCountry, selectedState);
-  }, [selectedCountry, selectedState]);
+    const selectedCountry = countryOptions.find(
+      (country) => country.id === signupForm.country?.value
+    );
+    console.log(selectedCountry, "on select selectedCountry");
+    if (
+      selectedCountry &&
+      (selectedCountry.countryStateDetails ?? []).length > 0
+    ) {
+      setStateOptions(selectedCountry.countryStateDetails);
+    } else {
+      setStateOptions([]);
+    }
+  }, [signupForm.country?.value]);
+
+  const handleCountryChange = (country: CountryDetails) => {
+    console.log(country, "on select country");
+    setStateOptions([]);
+    setSignupForm({
+      ...signupForm,
+      country: country,
+      state: null,
+    });
+  };
+
+  const handleSubmit = () => {
+    intellicoreService.getEntitlementByEmail(signupForm.email).then((res) => {
+      const {
+        data: { entitlement },
+      } = res as { data: any };
+      // console.log(entitlement, "res");
+
+      if (entitlement) {
+        navigate("/auth/login");
+        return;
+      }
+
+      // Other wise create entitlement
+      const countryDetail = countryOptions.find(
+        (country) => country.id === signupForm.country?.value
+      );
+
+      const stateDetail = stateOptions.find(
+        (state) => state.id === signupForm.state?.value
+      );
+      const payload = {
+        email: signupForm.email,
+        countryId: countryDetail?.id,
+        countryCode: countryDetail?.countryCode,
+      } as entitlementPayload;
+
+      if (stateDetail?.id) {
+        payload.countryStateDetailId = stateDetail.id;
+        payload.stateCode = stateDetail?.stateCode;
+      }
+
+      intellicoreService.createEntitlement(payload).then((res: any) => {
+        console.log(res, "create entitlement res");
+        const { token } = res?.data;
+
+        if (token) {
+          WebStorageService.setItem(webStorageKeyEnum.ENTITLEMENT_TOKEN, token);
+        }
+
+        // navigate("/auth/login");
+      });
+    });
+  };
+  console.log(import.meta.env, "env.VITE_RELEASESTAGE");
+  // console.log(countryOptions, "countryOptions");
+  console.log(signupForm, "Signup form");
 
   return (
-    <GridItem colSpan={1}>
-      <Flex
-        flexDir="column"
-        alignItems="center"
-        justifyContent="center"
-        gap={5}
-        p={{ base: 10, md: 14, lg: 20 }}
-      >
-        <Text fontSize="30px">Sign Up Account</Text>
-        <Text textAlign="center" mb={5}>
-          Enter your personal data to create your account
-        </Text>
-
-        <Flex flexDir="column" w="full" gapY={2}>
-          <Field label="Email" required>
-            <Input
-              borderRadius="2xl"
-              px={5}
-              py={7}
-              placeholder="eg. johnfrans@gmail.com"
-              bg="bg.input"
-              _placeholder={{ color: "fg.placeholder" }}
-            />
-          </Field>
-        </Flex>
-        {countries?.length && (
-          <Flex flexDir="column" w="full" gapY={2}>
-            <Field label="Country" required>
-              <MenuRoot
-                onSelect={(value) => {
-                  console.log(value);
-                  console.log(value.value);
-                  setSelectedCountry(
-                    countries.find((c) => c.countryName === value.value)
-                  );
-                }}
-              >
-                <MenuTrigger asChild px={5} pt={5} pb={9}>
-                  <Input
-                    borderRadius="2xl"
-                    placeholder="Select your country"
-                    bg="bg.input"
-                    _placeholder={{ color: "fg.placeholder" }}
-                    value={
-                      selectedCountry && selectedCountry.countryName
-                        ? selectedCountry.countryName
-                        : undefined
-                    }
-                  />
-                </MenuTrigger>
-                <MenuContent>
-                  {countries.length &&
-                    countries.map((country) => (
-                      <MenuItem key={country.id} value={country.countryName}>
-                        {country.countryName}
-                      </MenuItem>
-                    ))}
-                </MenuContent>
-              </MenuRoot>
-            </Field>
-          </Flex>
-        )}
-        {selectedCountry ? (
-          selectedCountry.countryStateDetails.length > 0 ? (
-            <Flex flexDir="column" w="full" gapY={2}>
-              <Field label="State / Province">
-                <MenuRoot
-                  onSelect={(value) => {
-                    console.log(value);
-                    console.log(value.value);
-                    setSelectedState(
-                      selectedCountry.countryStateDetails.find(
-                        (s) => s.stateName === value.value
-                      )
-                    );
-                  }}
-                >
-                  <MenuTrigger asChild px={5} pt={5} pb={9}>
-                    <Input
-                      readOnly
-                      borderRadius="2xl"
-                      placeholder="Select your state/province"
-                      bg="bg.input"
-                      userSelect="none"
-                      _placeholder={{ color: "fg.placeholder" }}
-                      value={selectedState?.stateName || ""}
-                    />
-                  </MenuTrigger>
-                  <MenuContent>
-                    {selectedCountry.countryStateDetails.map((state) => (
-                      <MenuItem key={state.id} value={state.stateName}>
-                        {state.stateName}
-                      </MenuItem>
-                    ))}
-                  </MenuContent>
-                </MenuRoot>
-              </Field>
-            </Flex>
-          ) : (
-            <Flex flexDir="column" w="full" gapY={2}>
-              <Field label="State / Province">
-                <Input
-                  borderRadius="2xl"
-                  px={5}
-                  py={7}
-                  placeholder="Enter your state/province"
-                  bg="bg.input"
-                  _placeholder={{ color: "fg.placeholder" }}
-                />
-              </Field>
-            </Flex>
-          )
-        ) : null}
-        <Flex flexDir="column" w="full" gapY={2}>
-          <Field
-            label="Password"
-            helperText="Must be at least 8 characters"
+    <Flex
+      // marginTop={"30px"}
+      flexDirection={"column"}
+      alignItems={"center"}
+      justifyContent={"center"}
+      px={"10"}
+    >
+      <Text fontSize={"3xl"} marginBottom={"10px"}>
+        Sign Up Account
+      </Text>
+      <Text textStyle={"sm"} fontWeight={"light"} textAlign={"center"}>
+        Enter your personal data to create your account
+      </Text>
+      <Stack gap={"4"} width={"full"} marginTop={"20px"}>
+        <Field required label={"Email"}>
+          <Input
             required
-          >
-            <PasswordInput
-              borderRadius="2xl"
-              px={5}
-              py={7}
-              placeholder="Enter your password"
-              bg="bg.input"
-              _placeholder={{ color: "fg.placeholder" }}
+            type="email"
+            name="email"
+            value={signupForm.email}
+            placeholder={"eg. johnfrans@gmail.com"}
+            onChange={(e) => {
+              setSignupForm({
+                ...signupForm,
+                email: e.target.value,
+              });
+            }}
+          />
+        </Field>
+        <Field required label={"Country"} helperText={"Select your country"}>
+          <SelectInput
+            onChange={handleCountryChange}
+            // getOptionLabel={(option) => option.label}
+            // getOptionValue={(option) => option.value}
+            options={countryOptions.map((country) => ({
+              value: country.id,
+              label: country.countryName,
+            }))}
+            placeholder={"Choose a country"}
+            value={signupForm.country || null}
+            isLoading={!countryOptions.length}
+          />
+        </Field>
+        {stateOptions.length > 0 && (
+          <Field required label={"State"} helperText={"Select your state"}>
+            <SelectInput
+              onChange={(e) => {
+                setSignupForm({
+                  ...signupForm,
+                  state: e,
+                });
+              }}
+              options={stateOptions.map((state) => ({
+                value: state.id,
+                label: state.stateName,
+              }))}
+              placeholder={"Choose a state"}
+              value={signupForm.state || null}
             />
           </Field>
-        </Flex>
-
-        <Button
-          borderRadius="2xl"
-          bg="secondary"
-          color="fg.secondary"
-          _hover={{ bg: "primary", color: "fg.primary" }}
-          transition="all 0.1s ease"
-          w="5/6"
-          py={7}
-          mt={5}
+        )}
+        <Field
+          required
+          label={"Password"}
+          helperText="Must be atleast 8 characters"
         >
-          Sign Up
-        </Button>
-
-        <Text fontSize="sm">
-          Already have an account?{" "}
-          <Text
-            as="span"
-            color="fg.link"
-            cursor="pointer"
-            onClick={() => {
-              navigate("/auth/login");
+          <PasswordInput
+            name="password"
+            placeholder={"Enter your password"}
+            value={signupForm.password}
+            onChange={(e) => {
+              setSignupForm({
+                ...signupForm,
+                password: e.target.value,
+              });
             }}
-          >
-            Log in
-          </Text>
+          />
+        </Field>
+      </Stack>
+
+      <Button
+        onClick={handleSubmit}
+        width={"5/6"}
+        py={7}
+        marginTop={"24px"}
+        isPrimary
+      >
+        Sign Up
+      </Button>
+
+      <Flex marginTop={"20px"}>
+        <Text marginRight={"5px"} textStyle={"sm"}>
+          Already have an account?
         </Text>
+        <Link to="/auth/login">
+          <Text color={"secondary"} textStyle={"sm"}>
+            Login
+          </Text>
+        </Link>
       </Flex>
-    </GridItem>
+    </Flex>
   );
 };
 
-export default SignUp;
+export default Signup;

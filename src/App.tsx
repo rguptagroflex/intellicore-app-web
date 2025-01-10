@@ -1,15 +1,10 @@
-import { useState } from "react";
-
 import "./App.css";
-import { Button } from "./app/components/shared/button";
-import { ColorModeButton } from "./app/components/shared/color-mode";
-import { Box } from "@chakra-ui/react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import Layout from "./app/components/layout/Layout";
-import Login from "./app/pages/auth/Login";
 import Home from "./app/pages/home/Home";
-import AuthColumn from "./app/pages/auth/AuthColumn";
-import SignUp from "./app/pages/auth/SignUp";
+import AuthLayout from "./app/pages/auth/AuthLayout";
+import Login from "./app/pages/auth/Login";
+import Signup from "./app/pages/auth/Signup";
 
 function App() {
   return (
@@ -21,10 +16,9 @@ function App() {
           <Route path="/insights" element={<Home />} />
           <Route path="/reports" element={<Home />} />
         </Route>
-        {/* <Route path="/login" element={<Login />} /> */}
-        <Route path="/auth" element={<AuthColumn />}>
-          <Route path="/auth/signup" element={<SignUp />} />
+        <Route path="/auth" element={<AuthLayout />}>
           <Route path="/auth/login" element={<Login />} />
+          <Route path="/auth/sign-up" element={<Signup />} />
         </Route>
         <Route path="*" element={<Navigate to={"/"} />} />
       </Routes>
