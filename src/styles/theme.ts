@@ -54,6 +54,13 @@ const semanticTokens = {
         },
         description: "Input Background color",
       },
+      hover: {
+        value: {
+          _light: "{colors.brand.900}",
+          _dark: "{colors.brand.900}",
+        },
+        description: "Input Background color",
+      },
     },
     fg: {
       primary: {
