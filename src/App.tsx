@@ -4,7 +4,7 @@ import Layout from "./app/components/layout/Layout";
 import Home from "./app/pages/home/Home";
 import AuthLayout from "./app/pages/auth/AuthLayout";
 import Login from "./app/pages/auth/Login";
-import Signup from "./app/pages/auth/SignUp";
+import Signup from "./app/pages/auth/Sign-up";
 import ProjectWrapper from "@/app/pages/intellicore/projects/ProjectWrapper";
 import CreatePipeline from "@/app/pages/intellicore/projects/views/CreatePipeline";
 import SourceDBSelection from "@/app/pages/intellicore/projects/views/SourceDBSelection";
