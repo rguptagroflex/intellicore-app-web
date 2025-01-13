@@ -150,9 +150,9 @@ const Signup = () => {
       });
     });
   };
-  console.log(import.meta.env, "env.VITE_RELEASESTAGE");
+  // console.log(import.meta.env, "env.VITE_RELEASESTAGE");  
   // console.log(countryOptions, "countryOptions");
-  console.log(signupForm, "Signup form");
+  // console.log(signupForm, "Signup form");
 
   return (
     <Flex

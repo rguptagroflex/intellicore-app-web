@@ -25,9 +25,17 @@ export default defineConfig(({ mode }) => {
 
   const serverConfig: ServerOptions = {
     host: true,
-    port: Number(env.VITE_PORT),
+    // port: Number(env.VITE_PORT),
+    port: undefined,
+    // port: 5173,
   };
 
+  // if (releaseStage === "local") {
+  if (releaseStage === "development") {
+    serverConfig.proxy = { "/identityapi": apiRoot, "/api": apiRoot };
+  }
+
+  console.log(serverConfig, "serverConfig");
   return {
     server: serverConfig,
     define: {

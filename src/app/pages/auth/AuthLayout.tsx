@@ -86,6 +86,7 @@ const AuthLayout = () => {
       background={"bg.tertiary"}
       height={"100%"}
       paddingTop={"40px"}
+      paddingLeft={{ base: "0px", lg: "13px" }}
     >
       <FirstColumn />
       <Outlet />
