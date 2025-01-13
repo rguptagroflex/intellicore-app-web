@@ -170,7 +170,7 @@ export const getCounteriesWithStates = () => {
   return new Promise((resolve, reject) => {
     fetch(`${config.identityResourceHost}countries`, {
       method: "GET",
-      // headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json" },
     }).then((response) => {
       if (response.ok) {
         response.json().then((data) => {

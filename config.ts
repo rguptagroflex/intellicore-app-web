@@ -16,8 +16,9 @@ function getResourceHost() {
 function getIdentityResourceHost() {
   return `${baseUrl}/identityapi/`;
 }
-const resourceHost = getResourceHost();
-const identityResourceHost = getIdentityResourceHost();
+const resourceHost = releaseStage === "local" ? "/api/" : getResourceHost();
+const identityResourceHost =
+  releaseStage === "local" ? "/identityapi/" : getIdentityResourceHost();
 
 const resourceUrls = {
   auth: {

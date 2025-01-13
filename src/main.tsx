@@ -5,9 +5,9 @@ import "./index.css";
 import { Provider } from "./app/components/shared/provider.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <Provider>
       <App />
     </Provider>
-  </React.StrictMode>
+  // </React.StrictMode>
 );

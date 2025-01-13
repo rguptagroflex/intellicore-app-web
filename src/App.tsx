@@ -4,7 +4,7 @@ import Layout from "./app/components/layout/Layout";
 import Home from "./app/pages/home/Home";
 import AuthLayout from "./app/pages/auth/AuthLayout";
 import Login from "./app/pages/auth/Login";
-import Signup from "./app/pages/auth/Signup";
+import Signup from "./app/pages/auth/Sign-up";
 
 function App() {
   return (
