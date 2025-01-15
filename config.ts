@@ -19,10 +19,10 @@ function getIdentityResourceHost() {
 const resourceHost = releaseStage === "local" ? "/api/" : getResourceHost();
 const identityResourceHost =
   releaseStage === "local" ? "/identityapi/" : getIdentityResourceHost();
-
+  
 const resourceUrls = {
   auth: {
-    login: `${resourceHost}auth/login`,
+    login: `${resourceHost}user/loginUser`,
     sendEmailOtp: `${resourceHost}user/register`,
     verifyEmailOtp: `${resourceHost}user/email/code`,
   },

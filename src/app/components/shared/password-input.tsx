@@ -49,7 +49,7 @@ export const PasswordInput = React.forwardRef<
   const style: PasswordInputProps = {
     py: 7,
     px: 4,
-    backgroundColor: "bg.input/50",
+    backgroundColor: "bg.input",
     color: "fg.primary",
     border: "none",
     borderRadius: "13px",

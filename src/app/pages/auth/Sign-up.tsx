@@ -140,17 +140,30 @@ const Signup = () => {
 
       intellicoreService.createEntitlement(payload).then((res: any) => {
         console.log(res, "create entitlement res");
-        const { token } = res?.data;
+        const { token, data } = res?.data;
 
         if (token) {
           WebStorageService.setItem(webStorageKeyEnum.ENTITLEMENT_TOKEN, token);
+          intellicoreService
+            .sendEmailOtp(signupForm.email, signupForm.password)
+            .then((res: any) => {
+              const { token: registrationToken } = res;
+              console.log(res, "sendEmailOtp res");
+              if (token) {
+                WebStorageService.setItem(
+                  webStorageKeyEnum.REGISTRATION_TOKEN,
+                  registrationToken
+                );
+                navigate("/auth/verify-email");
+              }
+            });
         }
 
         // navigate("/auth/login");
       });
     });
   };
-  // console.log(import.meta.env, "env.VITE_RELEASESTAGE");  
+  // console.log(import.meta.env, "env.VITE_RELEASESTAGE");
   // console.log(countryOptions, "countryOptions");
   // console.log(signupForm, "Signup form");
 
@@ -168,7 +181,7 @@ const Signup = () => {
       <Text textStyle={"sm"} fontWeight={"light"} textAlign={"center"}>
         Enter your personal data to create your account
       </Text>
-      <Stack gap={"4"} width={"full"} marginTop={"20px"}>
+      <Stack gap={"4"} width={"5/6"} marginTop={"20px"}>
         <Field required label={"Email"}>
           <Input
             required
@@ -237,7 +250,7 @@ const Signup = () => {
 
       <Button
         onClick={handleSubmit}
-        width={"5/6"}
+        width={"4/6"}
         py={7}
         marginTop={"24px"}
         isPrimary

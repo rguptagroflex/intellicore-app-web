@@ -34,8 +34,8 @@ export const login = (email: string, password: string) => {
 };
 
 export const sendEmailOtp = (email: string, password: string) => {
-  const registrationToken = WebStorageService.getItem(
-    webStorageKeyEnum.REGISTRATION_TOKEN
+  const entitlementToken = WebStorageService.getItem(
+    webStorageKeyEnum.ENTITLEMENT_TOKEN
   );
 
   return new Promise((resolve, reject) => {
@@ -43,7 +43,7 @@ export const sendEmailOtp = (email: string, password: string) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        authorization: `Bearer ${registrationToken}`,
+        authorization: `Bearer ${entitlementToken}`,
       },
       body: JSON.stringify({ email, password }),
     }).then((response) => {
@@ -192,7 +192,7 @@ export const request = (endpoint: string, options: requestOptions) => {
       "Content-Type": "application/json",
       ...(options.auth && {
         Authorization: `Bearer ${WebStorageService.getItem(
-          webStorageKeyEnum.ENTITLEMENT_TOKEN
+          webStorageKeyEnum.LOGIN_TOKEN
         )}`,
       }),
       ...(options.authCustomBearerToken && {

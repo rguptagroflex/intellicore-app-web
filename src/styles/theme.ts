@@ -8,7 +8,7 @@ const tokens = {
       200: { value: "#4B845C" },
       300: { value: "#4C7C56" },
       400: { value: "#437554" },
-      600: { value: "#30384C" },
+      600: { value: "#30384C99" },
       700: { value: "#8A99AB" },
       800: { value: "#EFF9F0" },
       900: { value: "#E4E4E6" },

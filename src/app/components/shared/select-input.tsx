@@ -1,4 +1,4 @@
-import Select from "react-select";
+import Select, { Theme, StylesConfig } from "react-select";
 import CreatableSelect from "react-select/creatable";
 import AsyncSelect from "react-select/async";
 import AsyncCreatableSelect from "react-select/async-creatable";
@@ -31,6 +31,39 @@ interface SelectInputProps {
   [key: string]: any;
 }
 
+const customStyles: StylesConfig = {
+  container: (provided) => ({
+    ...provided,
+    width: "100%",
+    backgroundColor: "#30384C99",
+    outline: "none",
+    border: "none",
+  }),
+
+  control: (provided) => ({
+    // class attribute : class=" css-i32vvf-control"
+    ...provided,
+    background: "transparent",
+    color: "#8A99AB",
+    display: "flex",
+    flexWrap: "nowrap",
+    borderColor: "none",
+    width: "100%",
+  }),
+  menu: (provided) => ({
+    // 'menu' is from the div class too.
+    ...provided,
+    background: "#30384C",
+    width: "100%",
+    color: "#8A99AB",
+  }),
+
+  placeholder: (provided) => ({
+    ...provided,
+    color: "#8A99AB",
+  }),
+};
+
 export const SelectInput = ({
   placeholder,
   options,
@@ -60,7 +93,10 @@ export const SelectInput = ({
       <CreatableSelect
         onCreateOption={onCreateOption}
         id={id}
-        styles={styles}
+        styles={{
+          ...customStyles,
+          ...styles,
+        }}
         isClearable={isClearable}
         options={options}
         value={value}
@@ -82,7 +118,10 @@ export const SelectInput = ({
     return (
       <AsyncSelect
         id={id}
-        styles={styles}
+        styles={{
+          ...customStyles,
+          ...styles,
+        }}
         cacheOptions
         defaultOptions
         loadOptions={loadOptions}
@@ -107,7 +146,10 @@ export const SelectInput = ({
       <AsyncCreatableSelect
         onCreateOption={onCreateOption}
         id={id}
-        styles={styles}
+        styles={{
+          ...customStyles,
+          ...styles,
+        }}
         cacheOptions
         defaultOptions
         loadOptions={loadOptions}
@@ -130,7 +172,10 @@ export const SelectInput = ({
   return (
     <Select
       id={id}
-      styles={styles}
+      styles={{
+        ...customStyles,
+        ...styles,
+      }}
       menuIsOpen={menuIsOpen}
       autoFocus={autoFocus}
       isClearable={!isClearable ? false : true}

@@ -5,6 +5,7 @@ import Home from "./app/pages/home/Home";
 import AuthLayout from "./app/pages/auth/AuthLayout";
 import Login from "./app/pages/auth/Login";
 import Signup from "./app/pages/auth/Sign-up";
+import VerifyEmaiOtp from "./app/pages/auth/VerifyEmaiOtp";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/auth" element={<AuthLayout />}>
           <Route path="/auth/login" element={<Login />} />
           <Route path="/auth/sign-up" element={<Signup />} />
+          <Route path="/auth/verify-email" element={<VerifyEmaiOtp />} />
         </Route>
         <Route path="*" element={<Navigate to={"/"} />} />
       </Routes>
