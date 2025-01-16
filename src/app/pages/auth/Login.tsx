@@ -72,7 +72,7 @@ const Login = () => {
         }}
         onSubmit={handleSubmit}
       >
-        <Stack gap={"4"} width={"full"} marginTop={"20px"}>
+        <Stack gap={"4"} width={"5/6"} marginTop={"20px"}>
           <Field required label={"Email"}>
             <Input
               required

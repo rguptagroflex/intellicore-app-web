@@ -1,15 +1,38 @@
-import { Outlet } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 import Sidebar from "./Sidebar";
+import { useEffect, useState } from "react";
+import config from "../../../../config";
+import { HStack, Stack } from "@chakra-ui/react";
+import { Skeleton, SkeletonCircle } from "../shared/skeleton";
 
 const Layout = () => {
-  return (
-    <>
-      <Sidebar />
-      {/* <Box bg={"bg.tertiary"} className="container" w="100%" minH="100vh"> */}
-      <Outlet />
-      {/* </Box> */}
-    </>
-  );
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!config.checkLoginTokenIsValid()) {
+      navigate("/auth/login");
+    }
+  });
+
+  if (loading) {
+    return (
+      <HStack gap="5">
+        <SkeletonCircle size="12" />
+        <Stack flex="1">
+          <Skeleton height="5" />
+          <Skeleton height="5" width="80%" />
+        </Stack>
+      </HStack>
+    );
+  } else {
+    return (
+      <>
+        <Sidebar />
+        <Outlet />
+      </>
+    );
+  }
 };
 
 export default Layout;

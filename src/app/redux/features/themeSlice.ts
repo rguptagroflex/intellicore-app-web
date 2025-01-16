@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 interface ThemeState {
   theme: string;
@@ -35,5 +35,6 @@ const themeSlice = createSlice({
   },
 });
 
-export const { setLightTheme } = themeSlice.actions;
+export const { setLightTheme, setDarkTheme, openSidebar, closeSidebar } =
+  themeSlice.actions;
 export default themeSlice.reducer;

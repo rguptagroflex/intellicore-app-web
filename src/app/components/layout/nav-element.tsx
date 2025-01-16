@@ -5,14 +5,14 @@ import { Tooltip } from "../shared/tooltip";
 interface NavItemProps {
   icon: any;
   label: string;
-  isCollapsed: boolean;
+  sidebarIsOpen: boolean;
   onClick?: () => void;
 }
 
 export const NavItem = ({
   icon: Icon,
   label,
-  isCollapsed,
+  sidebarIsOpen,
   onClick,
 }: NavItemProps) => {
   const IconComponent = <Icon size={20} />;
@@ -32,7 +32,7 @@ export const NavItem = ({
       transition="all 0.2s"
     >
       {IconComponent}
-      {!isCollapsed && (
+      {sidebarIsOpen && (
         <Text ml={4} fontSize="sm">
           {label}
         </Text>
@@ -40,11 +40,11 @@ export const NavItem = ({
     </Flex>
   );
 
-  return isCollapsed ? (
+  return sidebarIsOpen ? (
+    linkContent
+  ) : (
     <Tooltip content={label} positioning={{ placement: "right-end" }}>
       {linkContent}
     </Tooltip>
-  ) : (
-    linkContent
   );
 };

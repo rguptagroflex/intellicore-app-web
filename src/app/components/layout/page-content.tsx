@@ -1,3 +1,4 @@
+import { useAppSelector } from "@/app/hooks/useReduxHooks";
 import { Box } from "@chakra-ui/react";
 import React from "react";
 
@@ -6,15 +7,18 @@ interface PageContentProps {
 }
 
 const PageContent = ({ children }: PageContentProps) => {
-  const sidebarIsOpen = true;
+  const sidebarIsActive = useAppSelector(
+    (state) => state.themeData.sidebarIsActive
+  );
 
   return (
     <Box
       className="view-wrapper"
-      marginLeft={sidebarIsOpen ? "calc(230px)" : "80px"}
-      width={sidebarIsOpen ? "calc(100% - 230px)" : "calc(100% - 80px)"}
+      marginLeft={sidebarIsActive ? "calc(230px)" : "80px"}
+      width={sidebarIsActive ? "calc(100% - 230px)" : "calc(100% - 80px)"}
       minH="100vh"
       backgroundColor={"bg.tertiary"}
+      transition={"all 0.2s"}
     >
       <Box
         className="page-content-wrapper"
