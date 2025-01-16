@@ -27,7 +27,10 @@ export const login = (email: string, password: string) => {
           resolve(data);
         });
       } else {
-        reject(response);
+        // reject(response);
+        response.json().then((data) => {
+          reject(data);
+        });
       }
     });
   });

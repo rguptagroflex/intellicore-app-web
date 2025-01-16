@@ -2,6 +2,8 @@ import { useAppSelector } from "@/app/hooks/useReduxHooks";
 import { Box, Text } from "@chakra-ui/react";
 import React from "react";
 
+const pageContentMaxWidth = "1200px";
+
 interface PageContentProps {
   children?: React.ReactNode;
   title?: string;
@@ -25,7 +27,7 @@ const PageContent = ({ title, children }: PageContentProps) => {
         className="page-content-wrapper"
         width={"full"}
         margin={"0 auto"}
-        maxWidth={"1200px"}
+        maxWidth={pageContentMaxWidth}
       >
         <Box
           className="page-content"
@@ -38,17 +40,19 @@ const PageContent = ({ title, children }: PageContentProps) => {
           <Box
             className="page-content-header"
             width={"full"}
-            marginTop={"13px"}
+            marginTop={"15px"}
           >
-            <Text
-              textStyle={"2xl"}
-              borderRadius={"25px"}
-              bg={"bg.primary"}
-              px={5}
-              py={4}
-            >
-              {title}
-            </Text>
+            {title?.length && (
+              <Text
+                textStyle={"2xl"}
+                borderRadius={"25px"}
+                bg={"bg.primary"}
+                px={5}
+                py={4}
+              >
+                {title}
+              </Text>
+            )}
           </Box>
           {children}
         </Box>

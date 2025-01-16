@@ -6,6 +6,7 @@ import AuthLayout from "./app/pages/auth/AuthLayout";
 import Login from "./app/pages/auth/Login";
 import Signup from "./app/pages/auth/Sign-up";
 import VerifyEmaiOtp from "./app/pages/auth/VerifyEmaiOtp";
+import AllPipelinesWrapper from "./app/pages/data-management/AllPipelinesWrapper";
 
 function App() {
   return (
@@ -13,7 +14,10 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
-          <Route path="/data-management" element={<Home />} />
+          <Route
+            path="/data-management/all-pipelines"
+            element={<AllPipelinesWrapper />}
+          />
           <Route path="/insights" element={<Home />} />
           <Route path="/reports" element={<Home />} />
         </Route>

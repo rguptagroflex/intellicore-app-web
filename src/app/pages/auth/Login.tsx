@@ -11,7 +11,13 @@ import { Link, useNavigate } from "react-router";
 
 const Login = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [loginForm, setLoginForm] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [formError, setFormError] = useState({
     email: "",
     password: "",
   });
@@ -20,6 +26,11 @@ const Login = () => {
 
   const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
+    setFormError({
+      email: "",
+      password: "",
+    });
     console.log(loginForm);
 
     intellicoreService
@@ -35,17 +46,43 @@ const Login = () => {
           intellicoreService
             .login(loginForm.email, loginForm.password)
             .then((res: any) => {
-              if (res.meta.email) {
-                navigate("/auth/sign-up");
-              } else {
+              // console.log(res, "RESSSS");
+              if (res.data.token) {
                 WebStorageService.setItem(
                   webStorageKeyEnum.LOGIN_TOKEN,
                   res.data.token
                 );
+                WebStorageService.setItem(
+                  webStorageKeyEnum.LOGIN_TOKEN_START_TIME,
+                  new Date().getTime()
+                );
+                WebStorageService.removeItem(
+                  webStorageKeyEnum.REGISTRATION_TOKEN
+                );
+                WebStorageService.removeItem(
+                  webStorageKeyEnum.ENTITLEMENT_TOKEN
+                );
                 navigate("/");
+              } else {
+                navigate("/auth/sign-up");
               }
+            })
+            .catch((err) => {
+              if (err.meta.password.length) {
+                console.log(err, "error");
+                setFormError({
+                  ...formError,
+                  password: "The password is incorrect",
+                });
+              }
+            })
+            .finally(() => {
+              setLoading(false);
             });
         }
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -73,7 +110,12 @@ const Login = () => {
         onSubmit={handleSubmit}
       >
         <Stack gap={"4"} width={"5/6"} marginTop={"20px"}>
-          <Field required label={"Email"}>
+          <Field
+            required
+            label={"Email"}
+            invalid={formError.email.length > 0}
+            errorText={formError.email}
+          >
             <Input
               required
               type="email"
@@ -87,7 +129,12 @@ const Login = () => {
               }}
             />
           </Field>
-          <Field required label={"Password"}>
+          <Field
+            required
+            label={"Password"}
+            invalid={formError.password.length > 0}
+            errorText={formError.password}
+          >
             <PasswordInput
               placeholder={"Enter your password"}
               value={loginForm.password}
@@ -101,7 +148,14 @@ const Login = () => {
           </Field>
         </Stack>
 
-        <Button type="submit" width={"5/6"} py={7} marginTop={"24px"} isPrimary>
+        <Button
+          loading={loading}
+          type="submit"
+          width={"5/6"}
+          py={7}
+          marginTop={"24px"}
+          isPrimary
+        >
           Log In
         </Button>
       </form>

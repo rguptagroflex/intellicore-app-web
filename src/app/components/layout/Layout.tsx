@@ -10,8 +10,9 @@ const Layout = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    console.log(config.checkLoginTokenIsValid(), "Token is valid or not");
     if (!config.checkLoginTokenIsValid()) {
-      // navigate("/auth/login");
+      navigate("/auth/login");
     }
   });
 

@@ -9,7 +9,16 @@ import { openSidebar, closeSidebar } from "@/app/redux/features/themeSlice";
 
 const navItems = [
   { icon: MdDashboard, label: "Dashboard", to: "/" },
-  { icon: MdDashboard, label: "Data Management", to: "/data-management" },
+  {
+    icon: MdDashboard,
+    label: "Data Management",
+    to: "/data-management/all-pipelines",
+  },
+  {
+    icon: MdDashboard,
+    label: "Data Source Connections",
+    to: "/data-management/data-source-connections",
+  },
   { icon: MdDashboard, label: "Insights", to: "/insights" },
   { icon: MdDashboard, label: "Reports", to: "/reports" },
 ];

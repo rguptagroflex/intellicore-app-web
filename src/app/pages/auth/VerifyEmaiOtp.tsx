@@ -24,12 +24,18 @@ const VerifyEmaiOtp = () => {
     if (otpString.length < 4) return;
 
     intellicoreService.verifyEmailOtp(otpString).then((res: any) => {
+      console.log(res, "Res for OTP");
       const { loginToken } = res;
       if (loginToken) {
         WebStorageService.setItem(webStorageKeyEnum.LOGIN_TOKEN, loginToken);
+        WebStorageService.setItem(
+          webStorageKeyEnum.LOGIN_TOKEN_START_TIME,
+          new Date().getTime()
+        );
+        WebStorageService.removeItem(webStorageKeyEnum.REGISTRATION_TOKEN);
+        WebStorageService.removeItem(webStorageKeyEnum.ENTITLEMENT_TOKEN);
         navigate("/");
       } else {
-        
       }
       // console.log(res);
     });

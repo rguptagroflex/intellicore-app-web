@@ -40,20 +40,30 @@ type CountryDetails = {
   countryStateDetails: StateDetails[];
 };
 
+type SignupForm = {
+  email: string;
+  country: CountryDetails | null;
+  state: StateDetails | null;
+  password: string;
+};
+
 const Signup = () => {
   const navigate = useNavigate();
   const [countryOptions, setCountryOptions] = useState<CountryDetails[]>([]);
   const [stateOptions, setStateOptions] = useState<StateDetails[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const [signupForm, setSignupForm] = useState<{
-    email: string;
-    country: CountryDetails | null;
-    state: StateDetails | null;
-    password: string;
-  }>({
+  const [signupForm, setSignupForm] = useState<SignupForm>({
     email: "",
     country: null,
     state: null,
+    password: "",
+  });
+
+  const [formError, setFormError] = useState({
+    email: "",
+    country: "",
+    state: "",
     password: "",
   });
 
@@ -108,60 +118,70 @@ const Signup = () => {
   };
 
   const handleSubmit = () => {
-    intellicoreService.getEntitlementByEmail(signupForm.email).then((res) => {
-      const {
-        data: { entitlement },
-      } = res as { data: any };
-      // console.log(entitlement, "res");
+    setLoading(true);
+    intellicoreService
+      .getEntitlementByEmail(signupForm.email)
+      .then((res) => {
+        const {
+          data: { entitlement },
+        } = res as { data: any };
+        // console.log(entitlement, "res");
 
-      if (entitlement) {
-        navigate("/auth/login");
-        return;
-      }
-
-      // Other wise create entitlement
-      const countryDetail = countryOptions.find(
-        (country) => country.id === signupForm.country?.value
-      );
-
-      const stateDetail = stateOptions.find(
-        (state) => state.id === signupForm.state?.value
-      );
-      const payload = {
-        email: signupForm.email,
-        countryId: countryDetail?.id,
-        countryCode: countryDetail?.countryCode,
-      } as entitlementPayload;
-
-      if (stateDetail?.id) {
-        payload.countryStateDetailId = stateDetail.id;
-        payload.stateCode = stateDetail?.stateCode;
-      }
-
-      intellicoreService.createEntitlement(payload).then((res: any) => {
-        console.log(res, "create entitlement res");
-        const { token, data } = res?.data;
-
-        if (token) {
-          WebStorageService.setItem(webStorageKeyEnum.ENTITLEMENT_TOKEN, token);
-          intellicoreService
-            .sendEmailOtp(signupForm.email, signupForm.password)
-            .then((res: any) => {
-              const { token: registrationToken } = res;
-              console.log(res, "sendEmailOtp res");
-              if (token) {
-                WebStorageService.setItem(
-                  webStorageKeyEnum.REGISTRATION_TOKEN,
-                  registrationToken
-                );
-                navigate("/auth/verify-email");
-              }
-            });
+        if (entitlement) {
+          navigate("/auth/login");
+          return;
         }
 
-        // navigate("/auth/login");
-      });
-    });
+        // Other wise create entitlement
+        const countryDetail = countryOptions.find(
+          (country) => country.id === signupForm.country?.value
+        );
+
+        const stateDetail = stateOptions.find(
+          (state) => state.id === signupForm.state?.value
+        );
+        const payload = {
+          email: signupForm.email,
+          countryId: countryDetail?.id,
+          countryCode: countryDetail?.countryCode,
+        } as entitlementPayload;
+
+        if (stateDetail?.id) {
+          payload.countryStateDetailId = stateDetail.id;
+          payload.stateCode = stateDetail?.stateCode;
+        }
+
+        intellicoreService
+          .createEntitlement(payload)
+          .then((res: any) => {
+            console.log(res, "create entitlement res");
+            const { token, data } = res?.data;
+
+            if (token) {
+              WebStorageService.setItem(
+                webStorageKeyEnum.ENTITLEMENT_TOKEN,
+                token
+              );
+              intellicoreService
+                .sendEmailOtp(signupForm.email, signupForm.password)
+                .then((res: any) => {
+                  const { token: registrationToken } = res;
+                  console.log(res, "sendEmailOtp res");
+                  if (token) {
+                    WebStorageService.setItem(
+                      webStorageKeyEnum.REGISTRATION_TOKEN,
+                      registrationToken
+                    );
+                    navigate("/auth/verify-email");
+                  }
+                });
+            }
+
+            // navigate("/auth/login");
+          })
+          .finally(() => setLoading(false));
+      })
+      .finally(() => setLoading(false));
   };
   // console.log(import.meta.env, "env.VITE_RELEASESTAGE");
   // console.log(countryOptions, "countryOptions");
@@ -182,7 +202,12 @@ const Signup = () => {
         Enter your personal data to create your account
       </Text>
       <Stack gap={"4"} width={"5/6"} marginTop={"20px"}>
-        <Field required label={"Email"}>
+        <Field
+          required
+          label={"Email"}
+          invalid={formError.email.length > 0}
+          errorText={formError.email}
+        >
           <Input
             required
             type="email"
@@ -197,7 +222,13 @@ const Signup = () => {
             }}
           />
         </Field>
-        <Field required label={"Country"} helperText={"Select your country"}>
+        <Field
+          required
+          label={"Country"}
+          helperText={"Select your country"}
+          invalid={formError.country.length > 0}
+          errorText={formError.country}
+        >
           <SelectInput
             onChange={handleCountryChange}
             // getOptionLabel={(option) => option.label}
@@ -212,7 +243,13 @@ const Signup = () => {
           />
         </Field>
         {stateOptions.length > 0 && (
-          <Field required label={"State"} helperText={"Select your state"}>
+          <Field
+            required
+            label={"State"}
+            helperText={"Select your state"}
+            invalid={formError.state.length > 0}
+            errorText={formError.state}
+          >
             <SelectInput
               onChange={(e) => {
                 setSignupForm({
@@ -233,6 +270,8 @@ const Signup = () => {
           required
           label={"Password"}
           helperText="Must be atleast 8 characters"
+          invalid={formError.password.length > 0}
+          errorText={formError.password}
         >
           <PasswordInput
             name="password"
@@ -249,6 +288,7 @@ const Signup = () => {
       </Stack>
 
       <Button
+        loading={loading}
         onClick={handleSubmit}
         width={"4/6"}
         py={7}
