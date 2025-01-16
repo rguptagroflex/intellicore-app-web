@@ -7,12 +7,14 @@ import { Skeleton, SkeletonCircle } from "../shared/skeleton";
 
 const Layout = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     console.log(config.checkLoginTokenIsValid(), "Token is valid or not");
     if (!config.checkLoginTokenIsValid()) {
       navigate("/auth/login");
+    } else {
+      setLoading(false);
     }
   });
 
