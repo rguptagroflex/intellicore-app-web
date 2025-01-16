@@ -21,6 +21,8 @@ const AuthLayout = () => {
         backgroundImage={`url(${bg})`}
         backgroundRepeat={"no-repeat"}
         backgroundSize={"cover"}
+        marginLeft={{ base: "0px", lg: "13px" }}
+        // marginRight={{ base: "0px", lg: "13px" }}
       >
         <Image
           src={logo1}
@@ -52,7 +54,7 @@ const AuthLayout = () => {
           className="input-font"
         >
           <Box
-            backgroundColor={"bg.input/68"}
+            backgroundColor={"bg.input"}
             px={"10px"}
             py={"12px"}
             borderRadius={"10px"}
@@ -60,7 +62,7 @@ const AuthLayout = () => {
             1. Sign up your account
           </Box>
           <Box
-            backgroundColor={"bg.input/68"}
+            backgroundColor={"bg.input"}
             px={"10px"}
             py={"12px"}
             borderRadius={"10px"}
@@ -68,7 +70,7 @@ const AuthLayout = () => {
             2. Set up your workspace
           </Box>
           <Box
-            backgroundColor={"bg.input/68"}
+            backgroundColor={"bg.input"}
             px={"10px"}
             py={"12px"}
             borderRadius={"10px"}
@@ -86,7 +88,7 @@ const AuthLayout = () => {
       background={"bg.tertiary"}
       height={"100%"}
       paddingTop={"40px"}
-      paddingLeft={{ base: "0px", lg: "13px" }}
+      // paddingLeft={{ base: "0px", lg: "13px" }}
     >
       <FirstColumn />
       <Outlet />

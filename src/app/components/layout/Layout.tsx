@@ -1,5 +1,5 @@
 import { Outlet, useNavigate } from "react-router";
-import Sidebar from "./Sidebar";
+import Sidebar from "./side-bar";
 import { useEffect, useState } from "react";
 import config from "../../../../config";
 import { HStack, Stack } from "@chakra-ui/react";

@@ -27,8 +27,10 @@ const VerifyEmaiOtp = () => {
       const { loginToken } = res;
       if (loginToken) {
         WebStorageService.setItem(webStorageKeyEnum.LOGIN_TOKEN, loginToken);
+        navigate("/");
+      } else {
+        
       }
-      navigate("/");
       // console.log(res);
     });
 

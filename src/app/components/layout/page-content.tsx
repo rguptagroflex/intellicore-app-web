@@ -1,12 +1,13 @@
 import { useAppSelector } from "@/app/hooks/useReduxHooks";
-import { Box } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import React from "react";
 
 interface PageContentProps {
   children?: React.ReactNode;
+  title?: string;
 }
 
-const PageContent = ({ children }: PageContentProps) => {
+const PageContent = ({ title, children }: PageContentProps) => {
   const sidebarIsActive = useAppSelector(
     (state) => state.themeData.sidebarIsActive
   );
@@ -22,15 +23,33 @@ const PageContent = ({ children }: PageContentProps) => {
     >
       <Box
         className="page-content-wrapper"
-        width={"100%"}
+        width={"full"}
         margin={"0 auto"}
         maxWidth={"1200px"}
       >
         <Box
           className="page-content"
-          padding={{ base: "10px", lg: "40px" }}
-          width={"100%"}
+          px={{ base: "10px", lg: "40px" }}
+          paddingTop={"0px"}
+          position={"relative"}
+          width={"full"}
+          overflowY={"hidden"}
         >
+          <Box
+            className="page-content-header"
+            width={"full"}
+            marginTop={"13px"}
+          >
+            <Text
+              textStyle={"2xl"}
+              borderRadius={"25px"}
+              bg={"bg.primary"}
+              px={5}
+              py={4}
+            >
+              {title}
+            </Text>
+          </Box>
           {children}
         </Box>
       </Box>
